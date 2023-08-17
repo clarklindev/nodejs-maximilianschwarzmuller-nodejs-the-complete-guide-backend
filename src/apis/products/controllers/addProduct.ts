@@ -7,12 +7,24 @@ import User from '../../../lib/models/user';
 import { IError } from '../../../lib/interfaces/IError';
 import { IRequest } from '../../../lib/interfaces/IRequest';
 import { IUserDocument } from '../../../lib/interfaces/IUser';
-import { IProduct } from '../../../lib/interfaces/IProduct';
 
 //addProduct should receive an upload image
 export const addProduct = async (req: IRequest, res: Response, next: NextFunction) => {
-  const { title, price, description } = req.body.data.attributes as IProduct;
-  const upload: File | undefined = req.body.file;
+  const jsonApiData = req.body.jsonApiData; //note: "file" is not included..handled by multer (formData - not jsonapi format...)
+  const { title, price, description } = JSON.parse(jsonApiData).data.attributes;
+  const upload: File | undefined = req.file;
+  /*
+  upload:{
+    fieldname: 'upload',
+    originalname: 'bread.jpeg',
+    encoding: '7bit',
+    mimetype: 'image/jpeg',
+    destination: 'images',
+    filename: '2023-08-15_UTC_23_28_18.462Z__bread.jpeg',
+    path: 'images\\2023-08-15_UTC_23_28_18.462Z__bread.jpeg',
+    size: 9209
+  }
+  */
 
   //if no file was uploaded
   if (!upload) {
@@ -21,8 +33,6 @@ export const addProduct = async (req: IRequest, res: Response, next: NextFunctio
     throw error;
   }
 
-  console.log('upload: ', upload);
-
   try {
     const createProduct = async () => {
       //Mongoose - pass an object to Product - eg... { title (refers to title from schema) : title (refers to req.body.title) }
@@ -30,7 +40,7 @@ export const addProduct = async (req: IRequest, res: Response, next: NextFunctio
         title: title,
         price: price,
         description: description,
-        imageUrl: upload, //not the path, store just the image - makes things easier to maintain
+        imageUrl: upload.filename, //upload.filename: not the path, store just the image - makes things easier to maintain
         userId: req.userId, //or with mongoose: you can reference the entire object req.user and mongoose will get the ._id from there.
       });
 

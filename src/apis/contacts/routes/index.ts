@@ -25,11 +25,23 @@ const tenant: ITenant = {
 
 const router = express.Router();
 
-router.post('/', checkRequestFormat, isAuth, validateRequestData(contactValidation(tenant)), createContact);
+router.post(
+  '/',
+  checkRequestFormat,
+  isAuth,
+  validateRequestData(contactValidation(tenant), 'JsonApiData'),
+  createContact,
+);
 router.get('/', isAuth, getContacts);
 router.delete('/', isAuth, deleteAllContacts);
 router.get('/:id', isAuth, getContact);
-router.patch('/:id', checkRequestFormat, isAuth, validateRequestData(contactValidation(tenant)), updateContact);
+router.patch(
+  '/:id',
+  checkRequestFormat,
+  isAuth,
+  validateRequestData(contactValidation(tenant), 'JsonApiData'),
+  updateContact,
+);
 router.delete('/:id', isAuth, deleteContact);
 
 export default router;

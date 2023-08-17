@@ -10,8 +10,9 @@ const router = express.Router();
 router.get('/', isAuth, getProducts);
 router.get('/:productId', isAuth, getProduct);
 
-router.post('/', isAuth, validateRequestData(ProductValidation), addProduct);
-router.put('/:productId', isAuth, validateRequestData(ProductValidation), editProduct);
+//validateRequestData takes 'FormData' because of file attached to multipart form
+router.post('/', isAuth, validateRequestData(ProductValidation, 'FormData'), addProduct);
+router.put('/:productId', isAuth, validateRequestData(ProductValidation, 'FormData'), editProduct);
 
 router.delete('/:productId', isAuth, deleteProduct);
 router.delete('/', isAuth, deleteAllProducts);
