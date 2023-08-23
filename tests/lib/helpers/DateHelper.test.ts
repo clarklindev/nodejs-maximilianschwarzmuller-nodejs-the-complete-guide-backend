@@ -6,7 +6,7 @@ describe('filenameFriendlyUTCDate()', () => {
   it('should return UTC time given a date instance', () => {
     const date = new Date('2022-03-01');
     date.setHours(14, 30, 0);
-    expect(DateHelper.filenameFriendlyUTCDate(date)).toBe('2022-03-01T06_30_00.000Z');
+    expect(DateHelper.filenameFriendlyUTCDate(date)).toBe('2022-03-01_UTC_06_30_00.000Z');
   });
 });
 

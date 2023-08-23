@@ -14,6 +14,6 @@ export const initDatabase = (uri: string, databaseName: string) => {
       throw error;
     }
 
-    next();
+    return next();
   };
 };

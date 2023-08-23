@@ -5,17 +5,12 @@ import bcrypt from 'bcryptjs';
 import User from '../../../lib/models/user';
 import { IError } from '../../../lib/interfaces/IError';
 import { IUser } from '../../../lib/interfaces/IUser';
-import { generateToken } from '../../../lib/helpers/generateToken';
-
-const authenticateUser = async (password: string, hashedPassword: string) => {
-  return bcrypt.compare(password, hashedPassword);
-};
+import { jwtCreateToken } from '../../../lib/helpers/JWTCreateToken';
 
 //------------------------------------------------------------------------------------------------
 
 export const login = async (req: Request, res: Response, next: NextFunction) => {
-  const resourceAttributes = req.body.data.attributes;
-  const { email, password } = resourceAttributes;
+  const { email, password } = req.body.data.attributes;
 
   //1. make sure user exists
   const user: IUser | null = await User.findOne({ email });
@@ -27,7 +22,7 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
   }
 
   //2. authenticate user
-  const authenticated = await authenticateUser(password, user.password);
+  const authenticated = await bcrypt.compare(password, user.password);
   if (!authenticated) {
     const error: IError = new Error('account details invalid');
     error.statusCode = 401;
@@ -43,7 +38,7 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
   };
   let token;
   try {
-    token = await generateToken(payload);
+    token = await jwtCreateToken(payload);
   } catch (err: any) {
     const error: IError = new Error('generate token failed');
     error.statusCode = err.status;

@@ -4,24 +4,21 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
 
-import productRoutes from './apis/products/routes';
-import shopRoutes from './apis/shop/routes';
 import authRoutes from './apis/auth/routes';
-import contactRoutes from './apis/contacts/routes';
+// import productRoutes from './apis/products/routes';
+// import shopRoutes from './apis/shop/routes';
+// import contactRoutes from './apis/contacts/routes';
 import { IError } from './lib/interfaces/IError';
 import { jsonApiErrorResponseFromError } from './lib/helpers/jsonApiErrorResponseFromError';
 import { initMulter } from './lib/middleware/initMulter';
 import { initDatabase } from './lib/middleware/initDatabase';
 
-//enable environment variables
-dotenv.config();
+dotenv.config(); //enable environment variables
 
 const app: Express = express();
 
 //connect to database
-const MONGODB_URI = `mongodb://${process.env.MONGODB_USER}:${process.env.MONGODB_PASSWORD}@ac-yojaa83-shard-00-00.7tcuhtv.mongodb.net:27017,ac-yojaa83-shard-00-01.7tcuhtv.mongodb.net:27017,ac-yojaa83-shard-00-02.7tcuhtv.mongodb.net:27017/?ssl=true&replicaSet=atlas-1131uo-shard-0&authSource=admin&retryWrites=true&w=majority`;
-const databaseName = 'shop';
-app.use(initDatabase(MONGODB_URI, databaseName));
+app.use(initDatabase(process.env.MONGODB_URI as string, 'shop'));
 
 //start express server
 try {
@@ -56,9 +53,9 @@ app.use(initMulter('images', 'upload'));
 
 // routes
 app.use('/auth', authRoutes);
-app.use('/contacts', contactRoutes);
-app.use('/products', productRoutes);
-app.use('/shop', shopRoutes);
+// app.use('/contacts', contactRoutes);
+// app.use('/products', productRoutes);
+// app.use('/shop', shopRoutes);
 
 //handle all misc routes
 app.use((req, res) => {
@@ -67,7 +64,7 @@ app.use((req, res) => {
 
 // catches all errors passed with next(err);
 //note you need to include "next:NextFunction" prop as its part of the middleware error handler function prop signature
-app.use((err: IError, req: Request, res: Response, next: NextFunction) => {
+app.use((err: IError, req: Request, res: Response, _: NextFunction) => {
   const formattedResponse = jsonApiErrorResponseFromError(err);
   const statusCode = err.statusCode || 500;
   return res.status(statusCode).json(formattedResponse);

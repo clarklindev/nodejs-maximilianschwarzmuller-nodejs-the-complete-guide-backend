@@ -46,7 +46,7 @@ export const initMulter = (folder: string, inputFieldName: string) => {
         return res.status(500).json({ error: 'File upload failed' });
       }
       // Continue with next middleware or send response
-      next();
+      return next();
     });
   };
 };

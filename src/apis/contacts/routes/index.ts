@@ -3,7 +3,7 @@ import express from 'express';
 import { validationSchema as contactValidation } from './contact.validation';
 import { isAuth } from '../../../lib/middleware/isAuth';
 import { checkRequestFormat } from '../../../lib/middleware/checkRequestFormat';
-import { validateRequestData } from '../../../lib/middleware/validateRequestData';
+// import { validateRequestData } from '../../../lib/middleware/validateRequestData';
 import { ITenant } from '../../../lib/interfaces/ITenant';
 import {
   createContact,
@@ -29,7 +29,7 @@ router.post(
   '/',
   checkRequestFormat,
   isAuth,
-  validateRequestData(contactValidation(tenant), 'JsonApiData'),
+  // validateRequestData(contactValidation(tenant), 'JsonApiData'),
   createContact,
 );
 router.get('/', isAuth, getContacts);
@@ -39,7 +39,7 @@ router.patch(
   '/:id',
   checkRequestFormat,
   isAuth,
-  validateRequestData(contactValidation(tenant), 'JsonApiData'),
+  // validateRequestData(contactValidation(tenant), 'JsonApiData'),
   updateContact,
 );
 router.delete('/:id', isAuth, deleteContact);

@@ -40,28 +40,25 @@ type requestDataType = 'FormData' | 'JsonApiData';
 
 export const validateRequestData = (validation: object, reqType: requestDataType = 'JsonApiData') => {
   return async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      let formData;
+    let formData;
 
-      switch (reqType) {
-        case 'JsonApiData':
-          formData = req.body.data.attributes;
-          break;
-        case 'FormData':
-          formData = JSON.parse(req.body.jsonApiData).data.attributes;
-          break;
-        default:
-          throw new Error('requestDataType does not exist');
-      }
-
-      await validate(formData, validation, {
-        format: 'detailed',
-      });
-    } catch (errors: any) {
-      const formattedResponse = { errors: jsonApiErrorResponseFromValidateJsError(errors) };
-      return res.status(422).json(formattedResponse);
+    switch (reqType) {
+      case 'JsonApiData':
+        formData = JSON.parse(req.body).data.attributes; //receiving json api data must convert to js object
+        break;
+      case 'FormData':
+        formData = JSON.parse(req.body.jsonApiData).data.attributes;
+        break;
+      default:
+        throw new Error('requestDataType does not exist');
     }
 
-    next();
+    try {
+      await validate.async(formData, validation, { format: 'detailed' });
+    } catch (err: any) {
+      const formattedResponse = { errors: jsonApiErrorResponseFromValidateJsError(err) };
+      return res.status(422).json(formattedResponse);
+    }
+    return next();
   };
 };

@@ -6,7 +6,7 @@ import User from '../../../lib/models/user';
 import { IError } from '../../../lib/interfaces/IError';
 import { IUser } from '../../../lib/interfaces/IUser';
 
-const encryptPassword = async (password: string) => {
+export const encryptPassword = async (password: string) => {
   return bcrypt.hash(password, 12);
 };
 
@@ -36,7 +36,7 @@ export const saveNewPassword = async (req: Request, res: Response, next: NextFun
     return next(error);
   }
 
-  //3. encrypt user entered password
+  //2. encrypt user entered password
   let hashedPassword;
   try {
     hashedPassword = await encryptPassword(newPassword);
@@ -46,7 +46,7 @@ export const saveNewPassword = async (req: Request, res: Response, next: NextFun
     return next(error);
   }
 
-  //4. update password
+  //3. update password
   try {
     if (hashedPassword) {
       await updateUserPassword(user, hashedPassword);
@@ -64,7 +64,11 @@ export const saveNewPassword = async (req: Request, res: Response, next: NextFun
       id: user._id.toString(),
       attributes: {
         username: user.username,
+        password: hashedPassword,
       },
+    },
+    meta: {
+      status: 'password updated',
     },
   };
 

@@ -7,6 +7,7 @@ export interface IUser extends Document {
   password: string;
   username: string;
   verified: boolean;
+  verificationToken?: string;
   resetToken?: string | null;
   resetTokenExpiration?: number | null;
   cart: {

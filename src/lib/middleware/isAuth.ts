@@ -25,5 +25,5 @@ export const isAuth = (req: Request, res: Response, next: NextFunction) => {
   }
   req.userId = (decodedToken as JwtPayload).userId;
 
-  next();
+  return next();
 };

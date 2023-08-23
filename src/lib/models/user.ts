@@ -27,6 +27,11 @@ const userSchema = new Schema<IUser>(
       default: false,
     },
 
+    verificationToken: {
+      type: String,
+      required: false,
+    },
+
     resetToken: {
       type: String,
       required: false,
