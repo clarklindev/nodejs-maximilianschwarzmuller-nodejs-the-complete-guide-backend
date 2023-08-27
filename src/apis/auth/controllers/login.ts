@@ -5,7 +5,7 @@ import bcrypt from 'bcryptjs';
 import User from '../../../lib/models/user';
 import { IError } from '../../../lib/interfaces/IError';
 import { IUser } from '../../../lib/interfaces/IUser';
-import { jwtCreateToken } from '../../../lib/helpers/JWTCreateToken';
+import { jwtCreateToken } from '../../../lib/helpers/jwtCreateToken';
 
 //------------------------------------------------------------------------------------------------
 

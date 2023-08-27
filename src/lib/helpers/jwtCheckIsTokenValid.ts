@@ -1,5 +1,5 @@
 //returns true/false
-export const jwtCheckTokenValidity = (token: string) => {
+export const jwtCheckIsTokenValid = (token: string) => {
   if (!token) {
     console.log('there is no token');
     return true;
@@ -15,7 +15,7 @@ export const jwtCheckTokenValidity = (token: string) => {
   // Step 2: Decode the payload (middle part)
   //atob() is used to decode 64bit encoded data..
   const payload = JSON.parse(atob(tokenParts[1]));
-  console.log('payload: ', payload);
+  // console.log('payload: ', payload);
   if (!payload || !payload.exp) {
     // Invalid payload or missing expiration time
     return false;

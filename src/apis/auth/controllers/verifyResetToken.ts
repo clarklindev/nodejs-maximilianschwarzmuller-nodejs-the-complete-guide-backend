@@ -6,7 +6,10 @@ import User from '../../../lib/models/user';
 export const verifyResetToken = async (req: Request, res: Response, next: NextFunction) => {
   const { token } = req.params;
 
-  //2. try get user associated with token
+  //try get user associated with token -
+  //1. check that the token isnt expired
+  //2. check that this token belongs to a User - even if someone gets hold of token, it can only be used to reset password who received the email
+
   const user: IUser | null = await User.findOne({
     resetToken: token,
     resetTokenExpiration: { $gt: Date.now() },

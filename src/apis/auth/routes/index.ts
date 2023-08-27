@@ -1,6 +1,14 @@
 import express from 'express';
 
-import { login, signup, resetPassword, saveNewPassword, verifySignupToken, verifyResetToken } from '../controllers';
+import {
+  login,
+  signup,
+  resetPassword,
+  saveNewPassword,
+  verifySignupToken,
+  verifyResetToken,
+  verifyLoginToken,
+} from '../controllers';
 import { checkRequestFormat } from '../../../lib/middleware/checkRequestFormat';
 // import { isAuth } from '../../../lib/middleware/isAuth';
 // import { validationSchema as authLoginValidation } from './authLogin.validation';
@@ -15,5 +23,5 @@ router.post('/reset', checkRequestFormat, resetPassword);
 router.post('/reset/:token', checkRequestFormat, saveNewPassword);
 router.get('/verify-signuptoken/:token', verifySignupToken);
 router.get('/verify-resettoken/:token', verifyResetToken);
-
+router.get('/verify-logintoken/:token', verifyLoginToken);
 export default router;
