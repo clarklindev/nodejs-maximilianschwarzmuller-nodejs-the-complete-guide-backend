@@ -6,7 +6,7 @@ import { IError } from '../../../lib/interfaces/IError';
 import { IContact } from '../../../lib/interfaces/IContact';
 import { jsonApiSuccessResponseFromMongooseQuery } from '../../../lib/helpers/jsonApiSuccessResponseFromMongooseQuery';
 
-const getContactById = async (clientId: string, contactId: string): Promise<IContact | null> => {
+export const getContactById = async (clientId: string, contactId: string): Promise<IContact | null> => {
   return await Contact.findOne({ clientId, _id: contactId }).lean();
 };
 
@@ -20,7 +20,7 @@ export const getContact = async (req: Request, res: Response, next: NextFunction
   let contact: IContact | null;
   try {
     contact = await getContactById(reqClientId, reqQueryContact);
-    if (!contact) {
+    if (contact === null) {
       const error: IError = new Error('Contact not found');
       error.statusCode = 404;
       return next(error);
