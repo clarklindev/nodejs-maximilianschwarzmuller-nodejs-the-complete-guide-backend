@@ -3,6 +3,7 @@ import path from 'path';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
+import { graphqlHTTP } from 'express-graphql';
 
 import authRoutes from './apis/auth/routes';
 // import productRoutes from './apis/products/routes';
@@ -11,7 +12,10 @@ import authRoutes from './apis/auth/routes';
 import { IError } from './lib/interfaces/IError';
 import { jsonApiErrorResponseFromError } from './lib/helpers/jsonApiErrorResponseFromError';
 import { initMulter } from './lib/middleware/initMulter';
-import { initDatabase } from './lib/middleware/initDatabase';
+import { initDatabase } from './lib/middleware/initDatabase'; 
+
+import graphqlSchema from './graphql/schema';
+import graphqlResolver from './graphql/resolvers';
 
 dotenv.config(); //enable environment variables
 
@@ -56,6 +60,12 @@ app.use('/auth', authRoutes);
 // app.use('/contacts', contactRoutes);
 // app.use('/products', productRoutes);
 // app.use('/shop', shopRoutes);
+
+app.use('/graphql', graphqlHTTP({
+  schema: graphqlSchema,
+  rootValue: graphqlResolver,
+  graphiql: true // This line enables the GraphiQL tool for testing queries in the browser
+}));
 
 //handle all misc routes
 app.use((req, res) => {

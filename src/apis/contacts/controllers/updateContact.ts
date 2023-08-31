@@ -8,7 +8,7 @@ import { IContact } from '../../../lib/interfaces/IContact';
 import DateHelper from '../../../lib/helpers/DateHelper';
 import { jsonApiSuccessResponseFromMongooseQuery } from '../../../lib/helpers/jsonApiSuccessResponseFromMongooseQuery';
 
-const updateContactById = async (
+export const updateContactById = async (
   clientId: string,
   contactId: string,
   updateAttributes: Record<string, any>,
@@ -36,7 +36,7 @@ export const updateContact = async (req: Request, res: Response, next: NextFunct
   let contact: IContact | null;
   try {
     contact = await updateContactById(reqClientId, reqQueryContact, resourceAttributes);
-    if (!contact) {
+    if (contact === null) {
       const error: IError = new Error('update failed: possibly clientId / contactId invalid');
       error.statusCode = 404;
       return next(error);
@@ -48,9 +48,8 @@ export const updateContact = async (req: Request, res: Response, next: NextFunct
   }
 
   //2. format response
-  const response = jsonApiSuccessResponseFromMongooseQuery(contact);
+  const response = jsonApiSuccessResponseFromMongooseQuery(contact!);
   const formattedResponse = { data: response };
-
   //3. send response
   return res.status(200).json(formattedResponse);
 };

@@ -12,8 +12,8 @@ const deleteContactById = async (clientId: string, contactId: string): Promise<I
 //------------------------------------------------------------------------------------------------
 
 export const deleteContact = async (req: Request, res: Response, next: NextFunction) => {
-  const clientId = req.query.clientId as string;
-  const queryContact = req.params.id as string;
+  const clientId = req?.query?.clientId as string;
+  const queryContact = req?.params?.id as string;
 
   //1. delete contact
   let result: IContact | null;

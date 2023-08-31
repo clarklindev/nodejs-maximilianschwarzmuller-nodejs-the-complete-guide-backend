@@ -6,7 +6,7 @@ import { IError } from '../../../lib/interfaces/IError';
 import { jsonApiSuccessResponseFromMongooseQuery } from '../../../lib/helpers/jsonApiSuccessResponseFromMongooseQuery';
 import { IContact } from '../../../lib/interfaces/IContact';
 
-const getContactsByClientId = async (clientId: string): Promise<IContact[]> => {
+export const getContactsByClientId = async (clientId: string): Promise<IContact[]> => {
   return await Contact.find({ clientId }).lean();
 };
 
@@ -19,10 +19,15 @@ export const getContacts = async (req: Request, res: Response, next: NextFunctio
   let contacts: Array<IContact>;
   try {
     contacts = await getContactsByClientId(reqClientId);
+    if (contacts.length === 0) {
+      const error: IError = new Error('No contacts not found');
+      error.statusCode = 404;
+      return next(error);
+    }
   } catch (err: any) {
-    const error: IError = new Error('Failed to fetch contacts');
+    const error: IError = new Error('Server error');
     error.statusCode = 404;
-    return next(err);
+    return next(error);
   }
 
   //2. format response

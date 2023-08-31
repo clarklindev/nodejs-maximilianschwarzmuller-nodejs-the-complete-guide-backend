@@ -7,7 +7,7 @@ import { IError } from '../../../lib/interfaces/IError';
 import { IContact } from '../../../lib/interfaces/IContact';
 import { jsonApiSuccessResponseFromMongooseQuery } from '../../../lib/helpers/jsonApiSuccessResponseFromMongooseQuery';
 
-const createNewContact = async (contactData: Record<any, any>, clientId: string): Promise<IContact> => {
+export const createNewContact = async (contactData: Record<any, any>, clientId: string): Promise<IContact> => {
   const contact = new Contact({
     ...contactData,
     clientId: new mongoose.Types.ObjectId(clientId),
