@@ -38,20 +38,10 @@ FRONTEND: you append it to formdata,
  */
 type requestDataType = 'FormData' | 'JsonApiData';
 
-export const validateRequestData = (validation: object, reqType: requestDataType = 'JsonApiData') => {
+export const validateRequestData = (validation: object) => {
   return async (req: Request, res: Response, next: NextFunction) => {
-    let formData;
-
-    switch (reqType) {
-      case 'JsonApiData':
-        formData = JSON.parse(req.body).data.attributes; //receiving json api data must convert to js object
-        break;
-      case 'FormData':
-        formData = JSON.parse(req.body.jsonApiData).data.attributes;
-        break;
-      default:
-        throw new Error('requestDataType does not exist');
-    }
+    //note: not needed to JSON.parse() because Middleware is used to parse incoming JSON data with JSON API content type
+    const formData = req.body.data.attributes;
 
     try {
       await validate.async(formData, validation, { format: 'detailed' });

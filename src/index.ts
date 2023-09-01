@@ -12,7 +12,7 @@ import authRoutes from './apis/auth/routes';
 import { IError } from './lib/interfaces/IError';
 import { jsonApiErrorResponseFromError } from './lib/helpers/jsonApiErrorResponseFromError';
 import { initMulter } from './lib/middleware/initMulter';
-import { initDatabase } from './lib/middleware/initDatabase'; 
+import { initDatabase } from './lib/middleware/initDatabase';
 
 import graphqlSchema from './graphql/schema';
 import graphqlResolver from './graphql/resolvers';
@@ -42,6 +42,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: false })); //handling <form> post data, "false" - parsing the URL-encoded data with the querystring library or the qs library (when true)
+
 app.use(express.json()); //parse json application/json
 app.use(express.json({ type: 'application/vnd.api+json' })); // Middleware to parse incoming JSON data with JSON API content type
 
@@ -61,11 +62,14 @@ app.use('/auth', authRoutes);
 // app.use('/products', productRoutes);
 // app.use('/shop', shopRoutes);
 
-app.use('/graphql', graphqlHTTP({
-  schema: graphqlSchema,
-  rootValue: graphqlResolver,
-  graphiql: true // This line enables the GraphiQL tool for testing queries in the browser
-}));
+app.use(
+  '/graphql',
+  graphqlHTTP({
+    schema: graphqlSchema,
+    rootValue: graphqlResolver,
+    graphiql: true, // This line enables the GraphiQL tool for testing queries in the browser
+  }),
+);
 
 //handle all misc routes
 app.use((req, res) => {
