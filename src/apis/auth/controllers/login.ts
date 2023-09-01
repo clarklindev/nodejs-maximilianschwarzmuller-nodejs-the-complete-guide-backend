@@ -3,10 +3,9 @@ import { Request, Response, NextFunction } from 'express';
 import bcrypt from 'bcryptjs';
 
 import User from '../../../lib/models/user';
-import { IError } from '../../../lib/interfaces/IError';
 import { IUser } from '../../../lib/interfaces/IUser';
+import { IError } from '../../../lib/interfaces/IError';
 import { jwtCreateToken } from '../../../lib/helpers/jwtCreateToken';
-
 //------------------------------------------------------------------------------------------------
 
 export const login = async (req: Request, res: Response, next: NextFunction) => {
@@ -14,9 +13,8 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
 
   //1. make sure user exists
   const user: IUser | null = await User.findOne({ email });
-
   if (!user) {
-    const error: IError = new Error('user does not exist');
+    const error: IError = new Error('User does not exist');
     error.statusCode = 404;
     return next(error);
   }
@@ -60,6 +58,5 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
       message: 'User successfully logged in.',
     },
   };
-
   return res.status(200).json(formattedResponse);
 };

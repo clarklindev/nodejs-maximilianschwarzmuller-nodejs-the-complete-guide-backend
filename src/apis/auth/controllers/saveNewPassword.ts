@@ -6,17 +6,6 @@ import User from '../../../lib/models/user';
 import { IError } from '../../../lib/interfaces/IError';
 import { IUser } from '../../../lib/interfaces/IUser';
 
-export const encryptPassword = async (password: string) => {
-  return bcrypt.hash(password, 12);
-};
-
-const updateUserPassword = async (user: IUser, hashedPassword: string) => {
-  user.password = hashedPassword;
-  user.resetToken = undefined;
-  user.resetTokenExpiration = undefined;
-  return user.save();
-};
-
 //------------------------------------------------------------------------------------------------
 
 export const saveNewPassword = async (req: Request, res: Response, next: NextFunction) => {
@@ -29,27 +18,21 @@ export const saveNewPassword = async (req: Request, res: Response, next: NextFun
     resetToken: token,
     resetTokenExpiration: { $gt: Date.now() },
   });
-
   if (!user) {
     const error: IError = new Error('Unauthorized');
     error.statusCode = 401;
     return next(error);
   }
 
-  //2. encrypt user entered password
+  //2. encrypt user entered password + save to db
   let hashedPassword;
   try {
-    hashedPassword = await encryptPassword(newPassword);
-  } catch (err: any) {
-    const error: IError = new Error('Failed to encrypt password');
-    error.statusCode = err.status;
-    return next(error);
-  }
-
-  //3. update password
-  try {
+    hashedPassword = await bcrypt.hash(newPassword, 12);
     if (hashedPassword) {
-      await updateUserPassword(user, hashedPassword);
+      user.password = hashedPassword;
+      user.resetToken = undefined;
+      user.resetTokenExpiration = undefined;
+      await user.save();
     }
   } catch (err: any) {
     const error: IError = new Error('update details failed');
@@ -57,7 +40,7 @@ export const saveNewPassword = async (req: Request, res: Response, next: NextFun
     return next(error);
   }
 
-  //5. send response
+  //3. send response
   const formattedResponse = {
     data: {
       type: 'users',
@@ -71,6 +54,5 @@ export const saveNewPassword = async (req: Request, res: Response, next: NextFun
       status: 'password updated',
     },
   };
-
   return res.status(200).json(formattedResponse);
 };
