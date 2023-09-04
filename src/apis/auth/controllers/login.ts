@@ -15,6 +15,7 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
   const user: IUser | null = await User.findOne({ email });
   if (!user) {
     const error: IError = new Error('User does not exist');
+    error.title = 'authentication error';
     error.statusCode = 404;
     return next(error);
   }
@@ -23,7 +24,6 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
   const authenticated = await bcrypt.compare(password, user.password);
   if (!authenticated) {
     const error: IError = new Error('account details invalid');
-    error.title = 'authentication error';
     error.statusCode = 401;
     return next(error);
   }
