@@ -4,6 +4,6 @@ import User from '../models/user';
 export const emailAvailable = async (value: string) => {
   const user = await User.findOne({ email: value });
   if (user) {
-    return 'Email already in use';
+    return 'already in use';
   }
 };

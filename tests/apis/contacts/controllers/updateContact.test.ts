@@ -13,7 +13,7 @@ describe('updateContact()', () => {
   beforeAll(() => {
     req = {
       query: {
-        clientId: '5f9d2e5f8df7f4359023646c',
+        tenantId: '5f9d2e5f8df7f4359023646c',
       },
       params: {
         id: mongoose.Types.ObjectId.createFromHexString('1234567890abcdef12345678'),
@@ -47,6 +47,7 @@ describe('updateContact()', () => {
     sinon.restore();
   });
 
+  //fix: statements.
   it('should return an error if invalid req data', async () => {
     const findAndUpdateStub = sinon.stub(Contact, 'findOneAndUpdate');
     findAndUpdateStub.callsFake(() => {
@@ -64,7 +65,7 @@ describe('updateContact()', () => {
     expect(errorPassedToNext.message).toBe('findOneAndUpdate failed');
   });
 
-  it('should return an error if req id or clientId invalid', async () => {
+  it('should return an error if req id or tenantId invalid', async () => {
     const findAndUpdateStub = sinon.stub(Contact, 'findOneAndUpdate');
     findAndUpdateStub.callsFake(() => {
       return null;
@@ -78,13 +79,13 @@ describe('updateContact()', () => {
     expect(nextSpy.calledWithMatch(sinon.match.instanceOf(Error))).toBe(true);
     //check the error message
     const errorPassedToNext = nextSpy.args[0][0];
-    expect(errorPassedToNext.message).toBe('update failed: possibly clientId / contactId invalid');
+    expect(errorPassedToNext.message).toBe('update failed: possibly tenantId / contactId invalid');
   });
 
   it('should update contact', async () => {
     const updatedContact = {
       email: 'test@test.com',
-      clientId: '5f9d2e5f8df7f4359023646c',
+      tenantId: '5f9d2e5f8df7f4359023646c',
       _id: mongoose.Types.ObjectId.createFromHexString('1234567890abcdef12345678'),
       firstName: req.body.data.attributes.firstName, // Make sure req.body.data.attributes.firstName is defined
       createdAt: new Date(),
@@ -94,7 +95,7 @@ describe('updateContact()', () => {
     // Map the properties to match the schema and create the Mongoose document
     const mappedContact = new Contact({
       email: updatedContact.email,
-      clientId: updatedContact.clientId,
+      tenantId: updatedContact.tenantId,
       _id: updatedContact._id,
       firstName: updatedContact.firstName,
       createdAt: updatedContact.createdAt,

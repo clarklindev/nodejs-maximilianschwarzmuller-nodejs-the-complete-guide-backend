@@ -5,7 +5,7 @@ export const jsonApiSuccessResponseFromMongooseQuery = (object: Record<string, a
   const { _id, createdAt, updatedAt, ...attributes } = object;
 
   const attributeData: Record<string, any> = {
-    ...attributes._doc,
+    ...attributes._doc, // needs ._doc as .lean() is not used and lean reduces amount of data returned -> Tenant.findOne({ _id: reqTenantId }).lean();
   };
 
   // Include createdAt and updatedAt only if they exist on the object

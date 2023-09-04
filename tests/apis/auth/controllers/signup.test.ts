@@ -10,7 +10,7 @@ import { getEmailTransporter } from '../../../../src/lib/helpers/getEmailTranspo
 describe('apis/auth/controllers/signup()', () => {
   let req;
   let res;
-  let username;
+  let name;
   let email;
   let password;
   let id;
@@ -25,7 +25,7 @@ describe('apis/auth/controllers/signup()', () => {
       body: {
         data: {
           attributes: {
-            username: 'tester',
+            name: 'tester',
             email: 'test@gmail.com',
             password: '123',
           },
@@ -44,7 +44,7 @@ describe('apis/auth/controllers/signup()', () => {
       },
     };
 
-    username = req.body.data.attributes.username;
+    name = req.body.data.attributes.name;
     email = req.body.data.attributes.email;
     password = req.body.data.attributes.password;
 
@@ -59,7 +59,7 @@ describe('apis/auth/controllers/signup()', () => {
     const saveStub = sinon.stub(User.prototype, 'save');
     saveStub.callsFake(() => {
       return {
-        username: username,
+        name: name,
         email: email,
         verified: false,
         password: 'hashed_abcdef',

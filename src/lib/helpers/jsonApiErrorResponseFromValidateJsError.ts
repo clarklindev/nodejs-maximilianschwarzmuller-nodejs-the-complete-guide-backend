@@ -8,7 +8,7 @@ export const jsonApiErrorResponseFromValidateJsError = (errors: IValidateJsError
     return {
       status: 422,
       source: { pointer: `data/attributes/${e.attribute}` },
-      title: `Invalid ${e.attribute}`,
+      title: e.attribute,
       detail: e.error,
     };
   });

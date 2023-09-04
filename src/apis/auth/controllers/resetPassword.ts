@@ -11,7 +11,6 @@ import { sendEmail } from '../../../lib/helpers/sendEmail';
 
 export const resetPassword = async (req: Request, res: Response, next: NextFunction) => {
   const { email } = req.body.data.attributes;
-  req.userId = (decodedToken as JwtPayload).userId;
 
   //1. find user
   const user: IUser | null = await User.findOne({ email });

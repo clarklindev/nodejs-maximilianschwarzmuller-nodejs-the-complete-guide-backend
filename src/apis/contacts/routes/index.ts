@@ -3,7 +3,7 @@ import express from 'express';
 import { validationSchema as contactValidation } from './contact.validation';
 import { isAuth } from '../../../lib/middleware/isAuth';
 import { checkRequestFormat } from '../../../lib/middleware/checkRequestFormat';
-// import { validateRequestData } from '../../../lib/middleware/validateRequestData';
+import { validateRequestData } from '../../../lib/middleware/validateRequestData';
 import { ITenant } from '../../../lib/interfaces/ITenant';
 import {
   createContact,
@@ -25,23 +25,11 @@ const tenant: ITenant = {
 
 const router = express.Router();
 
-router.post(
-  '/',
-  checkRequestFormat,
-  isAuth,
-  // validateRequestData(contactValidation(tenant), 'JsonApiData'),
-  createContact,
-);
 router.get('/', isAuth, getContacts);
 router.delete('/', isAuth, deleteAllContacts);
+router.post('/', checkRequestFormat, isAuth, validateRequestData(contactValidation(tenant)), createContact);
 router.get('/:id', isAuth, getContact);
-router.patch(
-  '/:id',
-  checkRequestFormat,
-  isAuth,
-  // validateRequestData(contactValidation(tenant), 'JsonApiData'),
-  updateContact,
-);
+router.patch('/:id', checkRequestFormat, isAuth, validateRequestData(contactValidation(tenant)), updateContact);
 router.delete('/:id', isAuth, deleteContact);
 
 export default router;

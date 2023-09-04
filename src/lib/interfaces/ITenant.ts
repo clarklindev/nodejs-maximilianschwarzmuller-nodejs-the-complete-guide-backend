@@ -4,8 +4,7 @@ export interface ITenant {
   name?: string;
   phoneNumber?: string;
 
-  countryCode: string;
-  contacts: Array<IContact>;
+  countryCode?: string;
 
   createdAt: number;
   updatedAt: number;

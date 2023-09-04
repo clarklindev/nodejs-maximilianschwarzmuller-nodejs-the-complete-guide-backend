@@ -9,12 +9,12 @@ describe('emailAvailable()', () => {
     sinon.restore();
   });
 
-  it('should return "Email already in use" if email already registered', async () => {
+  it('should return "already in use" if email already registered', async () => {
     sinon.stub(User, 'findOne');
-    User.findOne.returns('Email already in use');
+    User.findOne.returns('already in use');
 
     const result = await emailAvailable('test@test.com');
-    expect(result).toBe('Email already in use');
+    expect(result).toBe('already in use');
   });
 
   it('should return undefined if email available', async () => {

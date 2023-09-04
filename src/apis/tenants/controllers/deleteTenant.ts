@@ -1,24 +1,19 @@
-//deleteContact
+//deleteTenant
 import { Request, Response, NextFunction } from 'express';
 
-import Contact from '../../../lib/models/contact';
+import Tenant from '../../../lib/models/tenant';
 import { IError } from '../../../lib/interfaces/IError';
-import { IContact } from '../../../lib/interfaces/IContact';
-
-const deleteContactById = async (tenantId: string, contactId: string): Promise<IContact | null> => {
-  return await Contact.findOneAndDelete({ tenantId, _id: contactId });
-};
+import { ITenant } from '../../../lib/interfaces/ITenant';
 
 //------------------------------------------------------------------------------------------------
 
-export const deleteContact = async (req: Request, res: Response, next: NextFunction) => {
-  const tenantId = req?.query?.tenantId as string;
-  const queryContact = req?.params?.id as string;
+export const deleteTenant = async (req: Request, res: Response, next: NextFunction) => {
+  const tenantId = req.params.id as string;
 
-  //1. delete contact
-  let result: IContact | null;
+  //1. delete tenant
+  let result: ITenant | null;
   try {
-    result = await deleteContactById(tenantId, queryContact);
+    result = await Tenant.findOneAndDelete({ _id: tenantId });
   } catch (err: any) {
     const error: IError = new Error('Delete failed');
     error.statusCode = err.status;
@@ -30,12 +25,15 @@ export const deleteContact = async (req: Request, res: Response, next: NextFunct
   //the returned value is not the actual document object itself. Instead, it's typically a JavaScript object that provides information about the deletion operation, such as the number of documents affected or whether the operation was successful.
   // If you want to access the content of the deleted document itself, including all its properties, you can use the ._doc property on the returned value, just as you would when accessing the document after a query.
   let formattedResponse = {};
+
   if (result) {
+    const { _id, ...restAttributes } = result._doc;
+
     formattedResponse = {
       data: {
-        id: result._id,
-        type: 'contact',
-        attributes: { ...result._doc },
+        id: _id,
+        type: 'tenant',
+        attributes: { ...restAttributes },
       },
       meta: {
         message: 'Successfully deleted',

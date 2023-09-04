@@ -9,7 +9,7 @@ describe('createContact()', () => {
   let res;
   let stubs;
   let resourceAttributes;
-  let reqClientId;
+  let reqtenantId;
 
   beforeAll(async () => {
     req = {
@@ -21,7 +21,7 @@ describe('createContact()', () => {
         },
       },
       query: {
-        clientId: 123,
+        tenantId: 123,
       },
     };
 
@@ -39,7 +39,7 @@ describe('createContact()', () => {
     };
 
     resourceAttributes = req.body.data.attributes;
-    reqClientId = req.query.clientId as string;
+    reqtenantId = req.query.tenantId as string;
   });
 
   afterEach(() => {
@@ -100,7 +100,6 @@ describe('createContact()', () => {
 
     const findOneStub = sinon.stub(Contact, 'findOne');
     findOneStub.returns(null);
-
     const saveStub = sinon.stub(Contact.prototype, 'save');
     saveStub.callsFake(() => {
       findResult.push({});
@@ -109,5 +108,7 @@ describe('createContact()', () => {
     await createContact(req, res, () => {});
     const secondResult = await Contact.find();
     expect(secondResult.length).toBe(2);
+
+    //check that save is called once.
   });
 });

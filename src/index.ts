@@ -6,9 +6,11 @@ import cookieParser from 'cookie-parser';
 import { graphqlHTTP } from 'express-graphql';
 
 import authRoutes from './apis/auth/routes';
+import tenantRoutes from './apis/tenants/routes';
 // import productRoutes from './apis/products/routes';
 // import shopRoutes from './apis/shop/routes';
 // import contactRoutes from './apis/contacts/routes';
+
 import { IError } from './lib/interfaces/IError';
 import { jsonApiErrorResponseFromError } from './lib/helpers/jsonApiErrorResponseFromError';
 import { initMulter } from './lib/middleware/initMulter';
@@ -58,6 +60,7 @@ app.use(initMulter('images', 'upload'));
 
 // routes
 app.use('/auth', authRoutes);
+app.use('/tenants', tenantRoutes);
 // app.use('/contacts', contactRoutes);
 // app.use('/products', productRoutes);
 // app.use('/shop', shopRoutes);

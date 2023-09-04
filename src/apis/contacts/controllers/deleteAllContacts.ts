@@ -7,22 +7,22 @@ import { IError } from '../../../lib/interfaces/IError';
 import { IContact } from '../../../lib/interfaces/IContact';
 
 const deleteAllContactsForClient = async (
-  clientId: string,
+  tenantId: string,
 ): Promise<Query<mongoose.mongo.DeleteResult, IContact> | null> => {
   return await Contact.deleteMany({
-    clientId: clientId,
+    tenantId: tenantId,
   });
 };
 
 //------------------------------------------------------------------------------------------------
 
 export const deleteAllContacts = async (req: Request, res: Response, next: NextFunction) => {
-  const clientId = req.query.clientId as string;
+  const tenantId = req.query.tenantId as string;
 
   //1. delete
   let result: mongoose.mongo.DeleteResult | null;
   try {
-    result = await deleteAllContactsForClient(clientId);
+    result = await deleteAllContactsForClient(tenantId);
   } catch (err: any) {
     const error: IError = new Error('delete failed');
     error.statusCode = 404;
@@ -33,7 +33,7 @@ export const deleteAllContacts = async (req: Request, res: Response, next: NextF
   if (result) {
     formattedResponse = {
       data: {
-        id: clientId,
+        id: tenantId,
         type: 'contact',
         attributes: {},
       },

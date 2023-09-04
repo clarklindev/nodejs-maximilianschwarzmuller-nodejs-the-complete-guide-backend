@@ -13,7 +13,7 @@ describe('isAuth()', () => {
         }
       },
     };
-    expect(() => isAuth(req, {}, () => {})).toThrowError('Not Authorized - token error');
+    expect(() => isAuth(req, {}, () => {})).toThrowError('Authorization error');
   });
 
   it('should throw an error if the authorization header is a string', () => {
@@ -36,10 +36,10 @@ describe('isAuth()', () => {
     expect(() => isAuth(req, {}, () => {})).toThrow();
   });
 
-  it('should yield a userId after decoding the token', () => {
+  it('should yield a token after passing authorization', () => {
     const req = {
       get: () => {
-        return 'Bearer xyz ppp';
+        return 'Bearer abc';
       },
     };
 
@@ -51,10 +51,10 @@ describe('isAuth()', () => {
     //SOLUTION: rather use stub method
     // Mock jwt.verify inside jsonwebtoken module
     sinon.stub(jwt, 'verify');
-    jwt.verify.returns({ userId: 'abc' });
+    jwt.verify.returns({ token: 'abc' });
 
     isAuth(req, {}, () => {});
-    expect(req).toHaveProperty('userId', 'abc');
+    expect(req).toHaveProperty('token');
     expect(jwt.verify.called).toBe(true);
     jwt.verify.restore();
   });

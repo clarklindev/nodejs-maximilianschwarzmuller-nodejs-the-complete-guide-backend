@@ -6,8 +6,8 @@ export const jsonApiErrorResponseFromError = (error: IError, meta?: Record<strin
   const jsonApiErrorResponse: IJsonApiError = {
     id: error.name,
     status: error.statusCode ? error.statusCode : 500,
-    title: error.message,
-    detail: error.stack,
+    title: error.title,
+    detail: error.message,
   };
 
   if (meta) {

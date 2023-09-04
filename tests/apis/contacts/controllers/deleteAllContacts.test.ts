@@ -19,7 +19,7 @@ describe('deleteAllContacts()', () => {
 
     req = {
       query: {
-        clientId: new mongoose.Types.ObjectId(),
+        tenantId: new mongoose.Types.ObjectId(),
       },
     };
 
@@ -49,20 +49,20 @@ describe('deleteAllContacts()', () => {
     expect(errorPassedToNext.message).toBe('delete failed');
   });
 
-  it('should delete all contacts of clientId from db', async () => {
+  it('should delete all contacts of tenantId from db', async () => {
     req = {
       query: {
-        clientId: 12345,
+        tenantId: 12345,
       },
     };
 
     let dbContent = [
       {
-        clientId: 12345,
+        tenantId: 12345,
       },
 
       {
-        clientId: 321,
+        tenantId: 321,
       },
     ];
 
@@ -70,9 +70,9 @@ describe('deleteAllContacts()', () => {
 
     const stubDeleteMany = sinon.stub(Contact, 'deleteMany');
     stubDeleteMany.callsFake(() => {
-      //remove matching clientId entries from db
+      //remove matching tenantId entries from db
       dbContent = dbContent.filter((each) => {
-        return each.clientId !== parseInt(req.query.clientId);
+        return each.tenantId !== parseInt(req.query.tenantId);
       });
 
       return { deletedCount: 1 };

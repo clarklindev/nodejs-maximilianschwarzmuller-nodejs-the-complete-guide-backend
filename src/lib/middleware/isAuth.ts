@@ -21,5 +21,8 @@ export const isAuth = (req: Request, res: Response, next: NextFunction) => {
     throw error;
   }
 
+  //this is the token from BACKEND login() step3: generate token
+  req.token = token; //token includes encoded payload
+
   return next();
 };

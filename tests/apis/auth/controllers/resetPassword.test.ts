@@ -42,7 +42,7 @@ describe('apis/auth/controllers/resetPassword()', () => {
     user = new User({
       email: 'test@gmail.com',
       password: '123',
-      username: 'tester',
+      name: 'tester',
       verified: false,
       userId: '1',
       _id: '1',
@@ -58,7 +58,7 @@ describe('apis/auth/controllers/resetPassword()', () => {
     const saveStub = sinon.stub(User.prototype, 'save');
     saveStub.callsFake(() => {
       return {
-        username: user.username,
+        name: user.name,
         email: user.email,
         verified: false,
         password: 'hashed_abcdef',
