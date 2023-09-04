@@ -1,5 +1,5 @@
 export const validationSchema = {
-  username: {
+  name: {
     presence: { message: 'is required' },
   },
 

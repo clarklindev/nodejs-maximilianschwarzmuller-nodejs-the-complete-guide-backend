@@ -5,7 +5,7 @@ import { CartItem } from './ICartItem';
 export interface IUser extends Document {
   email: string;
   password: string;
-  username: string;
+  name: string;
   verified: boolean;
   verificationToken?: string;
   resetToken?: string | null;

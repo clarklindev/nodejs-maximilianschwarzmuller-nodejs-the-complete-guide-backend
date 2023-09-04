@@ -23,17 +23,19 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
   const authenticated = await bcrypt.compare(password, user.password);
   if (!authenticated) {
     const error: IError = new Error('account details invalid');
+    error.title = 'authentication error';
     error.statusCode = 401;
     return next(error);
   }
 
-  //3. generate token
+  //3. generate token with a payload
   const payload = {
-    username: user.username,
+    name: user.name,
     email: user.email,
     userId: user._id.toString(),
     verified: user.verified,
   };
+
   let token;
   try {
     token = await jwtCreateToken(payload);
@@ -49,7 +51,7 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
       id: user._id.toString(),
       type: 'user',
       attributes: {
-        username: user.username,
+        name: user.name,
         email: user.email,
       },
     },

@@ -2,7 +2,6 @@ import mongoose, { Schema } from 'mongoose';
 
 import { ITenant } from '../interfaces/ITenant';
 import DateHelper from '../helpers/DateHelper';
-import contactSchema from './contact';
 const tenantSchema = new Schema<ITenant>(
   {
     name: {
@@ -22,8 +21,6 @@ const tenantSchema = new Schema<ITenant>(
       type: String,
     },
 
-    contacts: [contactSchema],
-
     createdAt: {
       type: Number,
       immutable: true, //means cant change
@@ -36,7 +33,7 @@ const tenantSchema = new Schema<ITenant>(
     },
   },
 
-  { timestamps: false, strict: false, shardKey: { clientId: 1 } }, //1 ascending, -1 descending
+  { timestamps: false, strict: false, shardKey: { tenantId: 1 } }, //1 ascending, -1 descending
 );
 
 export default mongoose.model<ITenant>('Tenant', tenantSchema);

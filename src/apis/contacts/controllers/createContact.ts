@@ -7,10 +7,10 @@ import { IError } from '../../../lib/interfaces/IError';
 import { IContact } from '../../../lib/interfaces/IContact';
 import { jsonApiSuccessResponseFromMongooseQuery } from '../../../lib/helpers/jsonApiSuccessResponseFromMongooseQuery';
 
-export const createNewContact = async (contactData: Record<any, any>, clientId: string): Promise<IContact> => {
+export const createNewContact = async (contactData: Record<any, any>, tenantId: string): Promise<IContact> => {
   const contact = new Contact({
     ...contactData,
-    clientId: new mongoose.Types.ObjectId(clientId),
+    tenantId: new mongoose.Types.ObjectId(tenantId),
   });
   await contact.save();
   return contact;
@@ -19,7 +19,7 @@ export const createNewContact = async (contactData: Record<any, any>, clientId: 
 //------------------------------------------------------------------------------------------------
 
 export const createContact = async (req: Request, res: Response, next: NextFunction) => {
-  const reqClientId = req.query.clientId as string;
+  const reqTenantId = req.query.tenantId as string;
   const resourceAttributes: Record<string, any> = req.body.data.attributes;
   const { email } = resourceAttributes;
 
@@ -34,7 +34,7 @@ export const createContact = async (req: Request, res: Response, next: NextFunct
   //2. create new contact
   let newContact: IContact;
   try {
-    newContact = await createNewContact(resourceAttributes, reqClientId);
+    newContact = await createNewContact(resourceAttributes, reqTenantId);
   } catch (err: any) {
     const error: IError = new Error('Failed to create contact');
     error.statusCode = 500;

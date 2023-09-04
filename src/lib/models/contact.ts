@@ -19,7 +19,7 @@ const contactSchema = new Schema<IContact>(
       type: String,
     },
 
-    clientId: {
+    tenantId: {
       type: Schema.Types.ObjectId,
       ref: 'Tenant',
       required: true,
@@ -36,7 +36,7 @@ const contactSchema = new Schema<IContact>(
     },
   },
 
-  { timestamps: false, strict: false, shardKey: { clientId: 1 } }, //1 ascending, -1 descending
+  { timestamps: false, strict: false, shardKey: { tenantId: 1 } }, //1 ascending, -1 descending
 );
 
 export default mongoose.model<IContact>('Contact', contactSchema);

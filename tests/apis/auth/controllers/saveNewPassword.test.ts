@@ -43,7 +43,7 @@ describe('apis/auth/controllers/saveNewPassword()', () => {
 
   const oldPassword = 'hashed_abcdef';
   user = new User({
-    username: 'test',
+    name: 'test',
     email: 'test@test.com',
     verified: false,
     password: oldPassword,

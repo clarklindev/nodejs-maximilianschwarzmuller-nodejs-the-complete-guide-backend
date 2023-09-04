@@ -6,20 +6,20 @@ import { IError } from '../../../lib/interfaces/IError';
 import { IContact } from '../../../lib/interfaces/IContact';
 import { jsonApiSuccessResponseFromMongooseQuery } from '../../../lib/helpers/jsonApiSuccessResponseFromMongooseQuery';
 
-export const getContactById = async (clientId: string, contactId: string): Promise<IContact | null> => {
-  return await Contact.findOne({ clientId, _id: contactId }).lean();
+export const getContactById = async (tenantId: string, contactId: string): Promise<IContact | null> => {
+  return await Contact.findOne({ tenantId, _id: contactId }).lean();
 };
 
 //------------------------------------------------------------------------------------------------
 
 export const getContact = async (req: Request, res: Response, next: NextFunction) => {
-  const reqClientId = req.query.clientId as string; //tenant/client
+  const reqTenantId = req.query.tenantId as string; //tenant/client
   const reqQueryContact = req.params.id as string; //what we searching for
 
   //1. get contact
   let contact: IContact | null;
   try {
-    contact = await getContactById(reqClientId, reqQueryContact);
+    contact = await getContactById(reqTenantId, reqQueryContact);
     if (contact === null) {
       const error: IError = new Error('Contact not found');
       error.statusCode = 404;

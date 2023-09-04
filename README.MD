@@ -213,16 +213,15 @@ if (!user) {
 - db collections: orders, products, users
 
 - test with postman
-- dont forget to configure .env with mongodb username/password
+- dont forget to configure .env with mongodb URI
 
 ```
 npm i mongodb
 ```
 
 - install and initialize dotenv in app.js
-- externalize username/password into .env
+- externalize mongodb username/password into .env
 - add .env to .gitignore
-
 
 ### install body-parser \*DEPRECATED
 
@@ -876,7 +875,7 @@ const fileStorage = multer.diskStorage({
   filename: (req, file, cb) => {
     cb(
       null,
-      DateHelper.filenameFriendlyDate(new Date()) + '__' + file.originalname //create unique filename
+      DateHelper.filenameFriendlyDate(new Date()) + '__' + file.originalname, //create unique filename
     ); //file.filename is the new name multer gives
   },
 });
@@ -923,7 +922,6 @@ exports.updatePost = (req, res, next) => {
 ## deleting with postman
 
 - if you delete db image references with postman, dont forget to cleanup the images/ folder on the backend server
-
 
 ---
 
@@ -983,12 +981,12 @@ Example:
 import { Document, Model, model, Schema } from 'mongoose';
 
 interface IUser extends Document {
-  username: string;
+  name: string;
   email: string;
 }
 
 const userSchema = new Schema({
-  username: String,
+  name: String,
   email: String,
 });
 
@@ -1005,10 +1003,10 @@ You can use Document<IUser> to access and modify specific document properties, p
 Example:
 
 ```ts
-const user: IUser | null = await UserModel.findOne({ username: 'john' });
+const user: IUser | null = await UserModel.findOne({ name: 'john' });
 
 if (user) {
-  console.log(user.username); // Accessing a document property
+  console.log(user.name); // Accessing a document property
   user.email = 'newemail@example.com'; // Modifying a document property
   await user.save(); // Saving changes to the database
 }

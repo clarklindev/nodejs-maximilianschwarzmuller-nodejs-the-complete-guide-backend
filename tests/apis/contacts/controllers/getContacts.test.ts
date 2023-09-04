@@ -3,7 +3,7 @@ import sinon from 'sinon';
 import mongoose from 'mongoose';
 
 import Contact from '../../../../src/lib/models/contact';
-import { getContacts, getContactsByClientId } from '../../../../src/apis/contacts/controllers/getContacts';
+import { getContacts, getContactsBytenantId } from '../../../../src/apis/contacts/controllers/getContacts';
 
 describe('getContacts()', () => {
   let req;
@@ -13,7 +13,7 @@ describe('getContacts()', () => {
   beforeAll(() => {
     req = {
       query: {
-        clientId: mongoose.Types.ObjectId.createFromHexString('1234567890abcdef12345678'),
+        tenantId: mongoose.Types.ObjectId.createFromHexString('1234567890abcdef12345678'),
       },
       params: {
         id: 1,
@@ -31,7 +31,7 @@ describe('getContacts()', () => {
     };
 
     stubs = {
-      getContactsByClientId,
+      getContactsBytenantId,
     };
   });
 
@@ -82,14 +82,14 @@ describe('getContacts()', () => {
     const dbContent = [
       {
         email: 'test@test.com',
-        clientId: mongoose.Types.ObjectId.createFromHexString('1234567890abcdef12345678'),
+        tenantId: mongoose.Types.ObjectId.createFromHexString('1234567890abcdef12345678'),
         createdAt: new Date(),
         updatedAt: new Date(),
         _id: 1,
       },
       {
         email: 'test2@test2.com',
-        clientId: new mongoose.Types.ObjectId(321),
+        tenantId: new mongoose.Types.ObjectId(321),
         createdAt: new Date(),
         updatedAt: new Date(),
         _id: 2,
@@ -101,7 +101,7 @@ describe('getContacts()', () => {
       const fakeQuery = {
         lean: sinon.stub().returns(
           dbContent.filter((each) => {
-            return each.clientId.toString() === req.query.clientId.toString();
+            return each.tenantId.toString() === req.query.tenantId.toString();
           }),
         ),
       };

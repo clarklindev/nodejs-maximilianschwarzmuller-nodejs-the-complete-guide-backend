@@ -4,9 +4,9 @@ import { IUser } from '../../../lib/interfaces/IUser';
 import User from '../../../lib/models/user';
 
 export const verifySignupToken = async (req: Request, res: Response, next: NextFunction) => {
-  const { token } = req.params;
+  const { token } = req.params; //note: this is not a jwt token
 
-  //2. try get user associated with token
+  //1. try get user associated with token
   const user: IUser | null = await User.findOne({
     verificationToken: token,
   });
@@ -21,7 +21,7 @@ export const verifySignupToken = async (req: Request, res: Response, next: NextF
     await user.save();
   }
 
-  //4. send response including token
+  //2. send response
   const formattedResponse = {
     data: {
       type: 'user',

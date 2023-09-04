@@ -13,7 +13,7 @@ describe('getContact()', () => {
   beforeAll(() => {
     req = {
       query: {
-        clientId: 123,
+        tenantId: 123,
       },
       params: {
         id: 1,
@@ -85,7 +85,7 @@ describe('getContact()', () => {
   it('should return the contact requested', async () => {
     const contact = {
       email: 'test@test.com',
-      clientId: new mongoose.Types.ObjectId(),
+      tenantId: new mongoose.Types.ObjectId(),
       createdAt: new Date(),
       updatedAt: new Date(),
       _id: 1,

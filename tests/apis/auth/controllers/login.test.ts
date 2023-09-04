@@ -45,7 +45,7 @@ describe('apis/auth//login()', () => {
     User.findOne.returns({
       email: 'test@gmail.com',
       password: '123',
-      username: 'tester',
+      name: 'tester',
       verified: false,
       userId: '1',
       _id: '1',
@@ -70,7 +70,7 @@ describe('apis/auth//login()', () => {
         id: '1',
         type: 'user',
         attributes: {
-          username: 'tester',
+          name: 'tester',
           email: 'test@gmail.com',
         },
       },

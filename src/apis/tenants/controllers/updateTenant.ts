@@ -1,24 +1,23 @@
-//updateContact
+//updateTenant
 import mongoose from 'mongoose';
 import { Request, Response, NextFunction } from 'express';
 
-import Contact from '../../../lib/models/contact';
+import Tenant from '../../../lib/models/tenant';
 import { IError } from '../../../lib/interfaces/IError';
-import { IContact } from '../../../lib/interfaces/IContact';
+import { ITenant } from '../../../lib/interfaces/ITenant';
 import DateHelper from '../../../lib/helpers/DateHelper';
 import { jsonApiSuccessResponseFromMongooseQuery } from '../../../lib/helpers/jsonApiSuccessResponseFromMongooseQuery';
 
-export const updateContactById = async (
+export const updateTenantById = async (
   tenantId: string,
-  contactId: string,
   updateAttributes: Record<string, any>,
-): Promise<IContact | null> => {
-  const updatedDocument = await Contact.findOneAndUpdate(
-    { tenantId: new mongoose.Types.ObjectId(tenantId), _id: contactId },
+): Promise<ITenant | null> => {
+  const updatedDocument = await Tenant.findOneAndUpdate(
+    { _id: new mongoose.Types.ObjectId(tenantId) },
     { ...updateAttributes, updatedAt: DateHelper.jsDateNowToUnixEpoch(Date.now()) },
     {
       timeStamps: false,
-      lean: true,
+      lean: false, //later just use ._doc to reduce content of query
       new: true,
     },
   );
@@ -27,17 +26,16 @@ export const updateContactById = async (
 
 //------------------------------------------------------------------------------------------------
 
-export const updateContact = async (req: Request, res: Response, next: NextFunction) => {
-  const reqTenantId = req.query.tenantId as string;
-  const reqQueryContact = req.params.id;
+export const updateTenant = async (req: Request, res: Response, next: NextFunction) => {
+  const reqTenantId = req.params.id as string;
   const resourceAttributes = req.body.data.attributes;
 
-  //1. find AND update contact
-  let contact: IContact | null;
+  //1. find AND update tenant
+  let tenant: ITenant | null;
   try {
-    contact = await updateContactById(reqTenantId, reqQueryContact, resourceAttributes);
-    if (contact === null) {
-      const error: IError = new Error('update failed: possibly tenantId / contactId invalid');
+    tenant = await updateTenantById(reqTenantId, resourceAttributes);
+    if (tenant === null) {
+      const error: IError = new Error('update failed: possibly tenantId / tenantId invalid');
       error.statusCode = 404;
       return next(error);
     }
@@ -48,7 +46,7 @@ export const updateContact = async (req: Request, res: Response, next: NextFunct
   }
 
   //2. format response
-  const response = jsonApiSuccessResponseFromMongooseQuery(contact);
+  const response = jsonApiSuccessResponseFromMongooseQuery(tenant);
   const formattedResponse = { data: response };
   //3. send response
   return res.status(200).json(formattedResponse);

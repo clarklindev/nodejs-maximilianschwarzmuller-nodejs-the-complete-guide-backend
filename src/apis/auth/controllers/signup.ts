@@ -8,7 +8,7 @@ import { IUser } from '../../../lib/interfaces/IUser';
 import { createToken } from '../../../lib/helpers/createToken';
 import { sendEmail } from '../../../lib/helpers/sendEmail';
 export const signup = async (req: Request, res: Response, next: NextFunction) => {
-  const { username, email, password } = req.body.data.attributes;
+  const { name, email, password } = req.body.data.attributes;
 
   //1. check if user exists - user should NOT exist, else return error
   let user: IUser | null;
@@ -34,7 +34,7 @@ export const signup = async (req: Request, res: Response, next: NextFunction) =>
   let saved;
   try {
     newUser = new User({
-      username,
+      name,
       email,
       password: await bcrypt.hash(password, 12),
       verified: false,
@@ -52,7 +52,7 @@ export const signup = async (req: Request, res: Response, next: NextFunction) =>
 
   //4. send signup email
   try {
-    const html = `<h1>you successfully signed up</h1><br><p>please click <a href="${process.env.FRONTEND_URL}:${process.env.FRONTEND_PORT}/auth/verify/${verificationToken}">this link</a> to confirm email.</p>`;
+    const html = `<h1>you successfully signed up</h1><br><p>please click <a href="${process.env.FRONTEND_URL}:${process.env.FRONTEND_PORT}/auth/verify/signup/${verificationToken}">this link</a> to confirm email.</p>`;
     await sendEmail(email, 'signup succeeded', html);
   } catch (err: any) {
     const error: IError = new Error('Send signup email failed');
@@ -66,7 +66,7 @@ export const signup = async (req: Request, res: Response, next: NextFunction) =>
       type: 'users',
       id: saved._id.toString(), //return user._id - this is the important part...
       attributes: {
-        username,
+        name,
         email,
       },
     },
@@ -74,5 +74,5 @@ export const signup = async (req: Request, res: Response, next: NextFunction) =>
       message: 'User successfully signed up.',
     },
   };
-  return res.status(201).json(formattedResponse);
+  return res.status(200).json(formattedResponse);
 };

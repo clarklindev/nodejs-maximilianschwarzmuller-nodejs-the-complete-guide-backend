@@ -5,6 +5,7 @@ import bcrypt from 'bcryptjs';
 import User from '../../../lib/models/user';
 import { IError } from '../../../lib/interfaces/IError';
 import { IUser } from '../../../lib/interfaces/IUser';
+import { sendEmail } from '../../../lib/helpers/sendEmail';
 
 //------------------------------------------------------------------------------------------------
 
@@ -40,13 +41,23 @@ export const saveNewPassword = async (req: Request, res: Response, next: NextFun
     return next(error);
   }
 
-  //3. send response
+  //3. send reset password email
+  try {
+    const html = `<p>password updated</p><p>Click here <a href="${process.env.FRONTEND_URL}:${process.env.FRONTEND_PORT}/auth/login">link</a> to login.`;
+    sendEmail(user.email, 'password updated', html);
+  } catch (err: any) {
+    const error: IError = new Error('failed to send email');
+    error.statusCode = err.status;
+    return next(error);
+  }
+
+  //4. send response
   const formattedResponse = {
     data: {
       type: 'users',
       id: user._id.toString(),
       attributes: {
-        username: user.username,
+        name: user.name,
         password: hashedPassword,
       },
     },

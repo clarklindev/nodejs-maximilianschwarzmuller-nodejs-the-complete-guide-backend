@@ -60,7 +60,7 @@ export const addProduct = async (req: IRequest, res: Response, next: NextFunctio
         return res.status(200).json({
           status: 'PRODUCT CREATED',
           product: result,
-          creator: { _id: user._id, username: user.username },
+          creator: { _id: user._id, name: user.name },
         });
       }
     };

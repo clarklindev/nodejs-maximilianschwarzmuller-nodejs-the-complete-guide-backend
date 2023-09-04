@@ -19,7 +19,7 @@ describe('deleteContact()', () => {
 
     req = {
       query: {
-        clientId: new mongoose.Types.ObjectId(),
+        tenantId: new mongoose.Types.ObjectId(),
       },
     };
 
@@ -49,10 +49,10 @@ describe('deleteContact()', () => {
     expect(errorPassedToNext.message).toBe('Delete failed');
   });
 
-  it('should delete all contacts of clientId with specific id from db', async () => {
+  it('should delete all contacts of tenantId with specific id from db', async () => {
     req = {
       query: {
-        clientId: 12345,
+        tenantId: 12345,
       },
       params: {
         id: 1,
@@ -61,17 +61,17 @@ describe('deleteContact()', () => {
 
     let dbContent = [
       {
-        clientId: 12345,
+        tenantId: 12345,
         _id: 1,
       },
 
       {
-        clientId: 12345,
+        tenantId: 12345,
         _id: 2,
       },
 
       {
-        clientId: 321,
+        tenantId: 321,
         _id: 3,
       },
     ];
@@ -80,9 +80,9 @@ describe('deleteContact()', () => {
 
     const stubDelete = sinon.stub(Contact, 'findOneAndDelete');
     stubDelete.callsFake(() => {
-      //remove matching clientId entries from db
+      //remove matching tenantId entries from db
       dbContent = dbContent.filter((each) => {
-        return !(each.clientId === parseInt(req.query.clientId) && each._id === parseInt(req.params.id));
+        return !(each.tenantId === parseInt(req.query.tenantId) && each._id === parseInt(req.params.id));
       });
 
       return { deletedCount: 1 };

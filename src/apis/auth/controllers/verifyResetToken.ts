@@ -4,7 +4,7 @@ import { IUser } from '../../../lib/interfaces/IUser';
 import User from '../../../lib/models/user';
 
 export const verifyResetToken = async (req: Request, res: Response, next: NextFunction) => {
-  const { token } = req.params;
+  const { token } = req.params; //note: this is not a jwt token
 
   //try get user associated with token -
   //1. check that the token isnt expired
