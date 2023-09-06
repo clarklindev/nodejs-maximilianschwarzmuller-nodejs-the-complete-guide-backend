@@ -4,12 +4,14 @@ import { CartItem } from './ICartItem';
 // Interface representing the User document in MongoDB
 export interface IUser extends Document {
   email: string;
-  password: string;
-  name: string;
+  password?: string;
+  googleId?: string;
+  name?: string;
   verified: boolean;
   verificationToken?: string;
   resetToken?: string | null;
   resetTokenExpiration?: number | null;
+  info?: object;
   cart: {
     items: CartItem[];
   };

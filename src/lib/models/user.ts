@@ -11,35 +11,44 @@ const userSchema = new Schema<IUser>(
     email: {
       type: String,
       required: true,
+      unique: true,
     },
     password: {
       type: String,
-      required: true,
+      select: false, //field will not be included in the query results when you retrieve documents from the database.
+    },
+
+    googleId: {
+      type: String,
+      // Make it optional since not all users will have Google IDs
     },
 
     name: {
       type: String,
-      required: true,
+    },
+
+    info: {
+      type: Schema.Types.Mixed,
     },
 
     verified: {
       type: Boolean,
-      default: false,
     },
 
     verificationToken: {
       type: String,
-      required: false,
+    },
+
+    verificationTokenExpiration: {
+      type: String,
     },
 
     resetToken: {
       type: String,
-      required: false,
     },
 
     resetTokenExpiration: {
       type: Number,
-      required: false,
     },
 
     cart: {
