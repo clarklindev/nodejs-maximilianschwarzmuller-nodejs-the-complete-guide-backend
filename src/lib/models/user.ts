@@ -18,11 +18,6 @@ const userSchema = new Schema<IUser>(
       select: false, //field will not be included in the query results when you retrieve documents from the database.
     },
 
-    googleId: {
-      type: String,
-      // Make it optional since not all users will have Google IDs
-    },
-
     name: {
       type: String,
     },
