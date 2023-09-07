@@ -28,6 +28,6 @@ router.get('/verify/login/:token', verifyLoginToken);
 router.get('/verify/signup/:token', verifySignupToken);
 router.get('/verify/reset/:token', verifyResetToken);
 
-router.get('/oauth/google/url', getGoogleOAuthUrl); //oAuth
+router.get('/oauth/google', getGoogleOAuthUrl); //oAuth
 router.get('/oauth/google/callback', googleOAuthCallback); //oAuth
 export default router;

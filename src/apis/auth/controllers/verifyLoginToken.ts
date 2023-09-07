@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { jwtCheckIsTokenValid } from '../../../lib/helpers/jwtCheckIsTokenValid';
 
 export const verifyLoginToken = async (req: Request, res: Response, next: NextFunction) => {
-  //BACKEND: get login token from req.params
+  //BACKEND: get login token from url (req.params)
   //FRONTEND: get login token from Auth context
   const { token } = req.params;
 

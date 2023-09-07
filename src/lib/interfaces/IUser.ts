@@ -9,6 +9,7 @@ export interface IUser extends Document {
   name?: string;
   verified: boolean;
   verificationToken?: string;
+  verificationTokenExpiration?: string;
   resetToken?: string | null;
   resetTokenExpiration?: number | null;
   info?: object;

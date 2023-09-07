@@ -12,9 +12,15 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
   const { email, password } = req.body.data.attributes;
 
   //1. make sure user exists
-  const user: IUser | null = await User.findOne({ email });
+  const user: IUser | null = await User.findOne({ email }).select('+password'); //explicitly specify the field in your query to include it in the result
   if (!user) {
     const error: IError = new Error('User does not exist');
+    error.title = 'authentication error';
+    error.statusCode = 404;
+    return next(error);
+  }
+  if (!user.password) {
+    const error: IError = new Error('try reset password');
     error.title = 'authentication error';
     error.statusCode = 404;
     return next(error);

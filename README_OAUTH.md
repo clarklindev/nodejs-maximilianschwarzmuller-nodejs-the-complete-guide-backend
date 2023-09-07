@@ -50,49 +50,50 @@ npm i googleapis
 ## route
 
 ```ts
-router.get('/oauth/google/url', getGoogleOAuthUrlRoute); //oAuth
+router.get('/oauth/google', getGoogleOAuthUrl); //oAuth
 ```
 
-## helper files - getOAuthClient.ts
+## helper files - getGoogleOAuthClient.ts
 
 ```ts
+import { OAuth2Client } from 'google-auth-library';
 import { google } from 'googleapis';
 
-let oAuth2ClientInstance = null;
+let oAuth2ClientInstance: OAuth2Client;
+
+const createGoogleOAuthInstance = () => {
+  oAuth2ClientInstance = new google.auth.OAuth2(
+    process.env.GOOGLE_CLIENT_ID,
+    process.env.GOOGLE_CLIENT_SECRET,
+    `${process.env.URL}:${process.env.PORT}/auth/oauth/google/callback`, //backend url
+  );
+  return oAuth2ClientInstance;
+};
 
 // Create and return the OAuth2 client instance
-export const getOAuthClient = () => {
-  if (!oAuth2ClientInstance) {
-    oAuth2ClientInstance = new google.auth.OAuth2(
-      process.env.GOOGLE_CLIENT_ID,
-      process.env.GOOGLE_CLIENT_SECRET,
-      `${process.env.URL}:${process.env.PORT}/auth/oauth/google/callback`, //backend url
-    );
-  }
-  return oAuth2ClientInstance;
+export const getGoogleOAuthClient = () => {
+  return oAuth2ClientInstance === undefined ? createGoogleOAuthInstance() : oAuth2ClientInstance;
 };
 ```
 
-## helper files - getGoogleOAuthUrl.ts
+## route - getGoogleOAuthUrl.ts
 
 ```ts
 //auth/routes/getGoogleOAuthUrl
 import { Request, Response, NextFunction } from 'express';
 
-import { getOAuthClient } from '../../../lib/helpers/getOAuthClient';
+import { getGoogleOAuthClient } from '../../../lib/helpers/getGoogleOAuthClient';
 
-////hey google, generate an url user can click on, and these are the permissions i need access to - this will then be sent back to user to be send back to the auth server.
+////hey google, generate an authorization code url user can click on, and these are the permissions i need access to - this will then be sent back to user to be send back to the auth server.
 export const getGoogleOAuthUrl = (req: Request, res: Response, next: NextFunction) => {
   const scopes = ['https://www.googleapis.com/auth/userinfo.email', 'https://www.googleapis.com/auth/userinfo.profile'];
 
-  const url = getOAuthClient().generateAuthUrl({
+  const url = getGoogleOAuthClient().generateAuthUrl({
     access_type: 'offline',
     prompt: 'consent',
     scope: scopes,
   });
 
   return res.status(200).json({ url });
-};
-
 };
 ```

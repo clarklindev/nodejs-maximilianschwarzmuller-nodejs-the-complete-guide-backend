@@ -3,17 +3,16 @@ import User from '../models/user';
 
 //receives data given back from google.
 export const updateOrCreateUserFromOAuth = async ({ oAuthUserInfo }) => {
-  const { id: googleId, verified_email: verified, email } = oAuthUserInfo;
+  const { verified_email: verified, email } = oAuthUserInfo;
 
   const existingUser = await User.findOne({ email });
   if (existingUser) {
-    const result = await User.findOneAndUpdate({ email }, { $set: { googleId, verified } }, { returnOriginal: false });
+    const result = await User.findOneAndUpdate({ email }, { $set: { verified } }, { returnOriginal: false });
     return result;
   } else {
     try {
       const newUser = new User({
         email,
-        googleId,
         verified,
         info: {},
         cart: { items: [] },
